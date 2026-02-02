@@ -1,0 +1,32 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+env/
+venv/
+.venv/
+
+# Packaging
+build/
+dist/
+*.egg-info/
+pip-wheel-metadata/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Pytest / caching
+.pytest_cache/
+.mypy_cache/
+.cache/
+
+# Model / large artifacts
+*.pkl
+*.pkl.bak
+
+# Misc
+.env
+.DS_Store
+*.log
