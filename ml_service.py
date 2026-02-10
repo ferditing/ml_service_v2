@@ -3,6 +3,8 @@ import joblib
 import os
 import pandas as pd
 from nlp_service import predict_from_nlp
+from fuzzy_matcher import match_symptoms
+from animal_normalizer import map_to_canonical_animal, detect_animal_from_text
 
 ROOT = os.path.dirname(__file__)
 MODEL_PATH = os.path.join(ROOT, "decision_tree_model.pkl")
@@ -53,3 +55,43 @@ def predict_from_text(payload: dict):
 
     # Forward to the NLP function which will build features and call the model.
     return predict_from_nlp(animal, symptom_text, payload.get("age"), payload.get("body_temperature"))
+
+
+@app.post("/normalize")
+def normalize(payload: dict):
+    """
+    Normalize/extract canonical animal type and symptoms from user input.
+    Useful for preprocessing reports before storage.
+    Can detect animal type from symptom text if not explicitly provided.
+    """
+    animal_input = payload.get("animal", "").strip()
+    symptom_text = payload.get("symptom_text", "").strip()
+    
+    if not symptom_text:
+        raise HTTPException(status_code=400, detail="`symptom_text` required")
+    
+    try:
+        # Normalize animal type: first try explicit input, then detect from text
+        canonical_animal = None
+        if animal_input:
+            canonical_animal = map_to_canonical_animal(animal_input)
+        
+        # If no animal from input, try to detect from symptom text
+        if not canonical_animal:
+            canonical_animal = detect_animal_from_text(symptom_text)
+        
+        # Extract canonical symptoms using fuzzy matching
+        symptom_result = match_symptoms(symptom_text, score_threshold=65)
+        matched_symptoms = symptom_result.get("matched_symptoms", [])
+        confidence = symptom_result.get("confidence", 0)
+        
+        return {
+            "animal_type": canonical_animal,
+            "matched_symptoms": matched_symptoms,
+            "symptom_confidence": confidence,
+            "symptom_text": symptom_text,
+            "success": bool(matched_symptoms)
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
