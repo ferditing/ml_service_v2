@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: ml-service-v2
+    env: docker
+    dockerfilePath: ./ml_service_v2/Dockerfile
+    plan: starter
+    buildCommand: ""
+    startCommand: "uvicorn ml_service:app --host 0.0.0.0 --port 8000"
+    envVars:
+      - key: MODEL_PATH
+        value: decision_tree_model.pkl
