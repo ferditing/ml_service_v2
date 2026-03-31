@@ -4,7 +4,8 @@ import re
 ANIMAL_MAP = {
     "cow": ["cow", "cattle", "bull", "calf", "heifer"],
     "goat": ["goat", "kid"],
-    "sheep": ["sheep", "ram", "ewe", "lamb"]
+    "sheep": ["sheep", "ram", "ewe", "lamb"],
+    "poultry": ["poultry", "chicken", "hen", "rooster", "duck", "turkey"]
 }
 
 def normalize_text(text: str) -> str:

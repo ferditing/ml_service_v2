@@ -23,8 +23,6 @@ pip-wheel-metadata/
 .cache/
 
 # Model / large artifacts
-*.pkl
-*.pkl.bak
 
 # Misc
 .env

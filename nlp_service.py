@@ -5,17 +5,33 @@ import numpy as np
 import pandas as pd
 
 from fuzzy_matcher import match_symptoms
-from animal_normalizer import map_to_canonical_animal
+from animal_normalizer import map_to_canonical_animal, detect_animal_from_text
 from symptom_map import SYMPTOM_MAP
 
-MODEL_PATH = "decision_tree_model.pkl"
+import os
 
-# Load model once
+# Always load from the package directory so relative imports work regardless of
+# the current working directory (uvicorn's startup CWD can vary).
+ROOT = os.path.dirname(__file__)
+MODEL_PATH = os.path.join(ROOT, "decision_tree_model.pkl")
+
+# Load model once, failing early with a helpful message if the artifact is
+# missing.  The training script (`train_decision_tree.py`) will create this
+# file in the same directory, so users should run it before starting the
+# service.
+if not os.path.exists(MODEL_PATH):
+    raise FileNotFoundError(
+        f"Model artifact not found at {MODEL_PATH}. "
+        "Have you run `train_decision_tree.py` to generate it?"
+    )
+
+# Load the joblib artifact
 artifact = joblib.load(MODEL_PATH)
 
 model = artifact["model"]
 FEATURES = artifact["features"]
 LABELS = artifact["label_encoder_classes"]
+ANIMAL_SYMPTOMS = artifact.get("animal_symptoms", {})  # Load animal-symptom mapping
 
 def predict_from_nlp(
     animal_input: str,
@@ -26,11 +42,22 @@ def predict_from_nlp(
     # ---------------------------
     # 1. Normalize animal
     # ---------------------------
-    animal = map_to_canonical_animal(animal_input)
+    animal = None
+    
+    # First, try the provided animal input
+    if animal_input and animal_input.strip():
+        animal = map_to_canonical_animal(animal_input.strip())
+    
+    # If no valid animal from input, try to detect from symptom text
+    if not animal and symptom_text:
+        animal = detect_animal_from_text(symptom_text)
+    
+    # If still no animal, return error
     if not animal:
         return {
-            "error": "Unsupported or unknown animal type",
-            "animal_input": animal_input
+            "error": "Could not determine animal type. Please provide an animal or mention it in symptoms.",
+            "animal_input": animal_input,
+            "symptom_text": symptom_text
         }
 
     # ---------------------------
