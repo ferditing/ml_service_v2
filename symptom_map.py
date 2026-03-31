@@ -1,144 +1,53 @@
 # symptom_map.py
-# Canonical symptom vocabulary aligned EXACTLY with model features
+# Canonical symptom vocabulary aligned EXACTLY with 10-disease model features
 
 SYMPTOM_MAP = {
-    "loss_of_appetite": [
-        "loss of appetite",
-        "not eating",
-        "stopped eating",
-        "refusing food",
-        "poor appetite"
-    ],
-
-    "depression": [
-        "depression",
-        "lethargic",
-        "dull",
-        "inactive",
-        "low energy"
-    ],
-
-    "painless_lumps": [
-        "painless lumps",
-        "lumps",
-        "skin lumps",
-        "nodules"
-    ],
-
-    "difficulty_walking": [
-        "difficulty walking",
-        "trouble walking",
-        "walking difficulty",
-        "cannot walk well"
-    ],
-
-    "lameness": [
-        "lameness",
-        "limping",
-        "cannot stand properly"
-    ],
-
-    "blisters_on_mouth": [
-        "blisters on mouth",
-        "mouth blisters",
-        "blisters in mouth"
-    ],
-
-    "blisters_on_gums": [
-        "blisters on gums",
-        "gum blisters"
-    ],
-
-    "blisters_on_tongue": [
-        "blisters on tongue",
-        "tongue blisters"
-    ],
-
-    "blisters_on_hooves": [
-        "blisters on hooves",
-        "hoof blisters"
-    ],
-
-    "sores_on_mouth": [
-        "sores on mouth",
-        "mouth sores"
-    ],
-
-    "sores_on_gums": [
-        "sores on gums",
-        "gum sores"
-    ],
-
-    "sores_on_tongue": [
-        "sores on tongue",
-        "tongue sores"
-    ],
-
-    "sores_on_hooves": [
-        "sores on hooves",
-        "hoof sores"
-    ],
-
-    "chills": [
-        "chills",
-        "shivering",
-        "trembling"
-    ],
-
-    "sweats": [
-        "sweating",
-        "excessive sweating",
-        "sweats"
-    ],
-
-    "fatigue": [
-        "fatigue",
-        "tired",
-        "weak",
-        "looks weak"
-    ],
-
-    "shortness_of_breath": [
-        "shortness of breath",
-        "difficulty breathing",
-        "breathing problems"
-    ],
-
-    "crackling_sound": [
-        "crackling sound",
-        "crackling noise"
-    ],
-
-    "chest_discomfort": [
-        "chest discomfort",
-        "chest pain"
-    ],
-
-    "swelling_in_limb": [
-        "swelling in limb",
-        "swollen leg",
-        "leg swelling"
-    ],
-
-    "swelling_in_extremities": [
-        "swelling in extremities",
-        "swollen feet",
-        "swollen limbs"
-    ],
-
-    "swelling_in_neck": [
-        "swelling in neck",
-        "neck swelling"
-    ],
-
-    "swelling_in_abdomen": [
-        "swelling in abdomen",
-        "bloated stomach",
-        "abdominal swelling"
-    ],
-
-    "swelling_in_muscle": [
-        "muscle swelling",
-        "swollen muscle"
-    ],
+    "loss_of_appetite": ["loss of appetite", "not eating", "stopped eating", "refusing food", "poor appetite"],
+    "depression": ["depression", "lethargic", "dull", "inactive", "low energy"],
+    "painless_lumps": ["painless lumps", "lumps", "skin lumps", "nodules"],
+    "difficulty_walking": ["difficulty walking", "trouble walking", "walking difficulty", "cannot walk well"],
+    "lameness": ["lameness", "limping", "stiffness", "cannot stand properly"],
+    "blisters_on_mouth": ["blisters on mouth", "mouth blisters", "vesicles in mouth"],
+    "blisters_on_gums": ["blisters on gums", "gum blisters"],
+    "blisters_on_tongue": ["blisters on tongue", "tongue blisters"],
+    "blisters_on_hooves": ["blisters on hooves", "hoof blisters", "foot blisters"],
+    "sores_on_mouth": ["sores on mouth", "mouth sores"],
+    "sores_on_gums": ["sores on gums", "gum sores"],
+    "sores_on_tongue": ["sores on tongue", "tongue sores"],
+    "sores_on_hooves": ["sores on hooves", "hoof sores", "foot sores"],
+    "chills": ["chills", "shivering", "trembling"],
+    "sweats": ["sweating", "excessive sweating", "sweats"],
+    "fatigue": ["fatigue", "tired", "weak", "looks weak", "exhaustion"],
+    "shortness_of_breath": ["shortness of breath", "gasping", "difficulty breathing", "breathing problems"],
+    "crackling_sound": ["crackling sound", "crackling noise", "crepitus"],
+    "chest_discomfort": ["chest discomfort", "chest pain"],
+    "swelling_in_limb": ["swelling in limb", "swollen leg", "leg swelling"],
+    "swelling_in_extremities": ["swelling in extremities", "swollen feet", "swollen joints"],
+    "swelling_in_neck": ["swelling in neck", "neck swelling"],
+    "swelling_in_abdomen": ["swelling in abdomen", "bloated stomach", "abdominal swelling"],
+    "swelling_in_muscle": ["muscle swelling", "swollen muscle"],
+    "enlarged_lymph_nodes": ["enlarged lymph nodes", "swollen lymph nodes", "lymph node swelling"],
+    "frothing_at_mouth": ["frothing at mouth", "foaming at mouth", "mouth frothing"],
+    "lacrimation": ["lacrimation", "excessive tearing", "watery eyes", "tears"],
+    "twisted_neck": ["twisted neck", "neck twisting", "wry neck", "torticollis"],
+    "greenish_diarrhea": ["greenish diarrhea", "green diarrhea", "green stool"],
+    "mass_abortion": ["mass abortion", "abortion in herd", "multiple abortions", "miscarriage"],
+    "jaundice": ["jaundice", "yellow skin", "yellow eyes", "yellowing"],
+    "blood_in_stool": ["blood in stool", "bloody stool", "stool with blood"],
+    
+    # --- Newly Added Symptoms from Refined Logic ---
+    "bloating": ["bloating", "bloat", "distended stomach", "gas"],
+    "bloody_discharge": ["bloody discharge", "bleeding from nose", "bleeding from anus", "hemorrhage"],
+    "coughing": ["coughing", "cough", "dry cough"],
+    "crackling_sound_on_touch": ["crackling sound on touch", "crunchy skin", "gas under skin"],
+    "extended_neck": ["extended neck", "stretching neck", "head held forward"],
+    "foul_diarrhea": ["foul diarrhea", "smelly diarrhea", "stinking stool"],
+    "heavy_breathing": ["heavy breathing", "labored breathing", "fast breathing", "panting"],
+    "high_fever": ["high fever", "burning up", "very hot"],
+    "matted_eyes": ["matted eyes", "crusty eyes", "stuck eyelids", "eye discharge"],
+    "nasal_discharge": ["nasal discharge", "runny nose", "mucus from nose"],
+    "painful_cough": ["painful cough", "hurts to cough", "sharp cough"],
+    "salivation": ["salivation", "drooling", "excessive spit"],
+    "skin_nodules": ["skin nodules", "firm lumps", "skin bumps"],
+    "sudden_death": ["sudden death", "died suddenly", "found dead"],
 }

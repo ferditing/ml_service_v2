@@ -14,13 +14,27 @@ artifact = joblib.load(MODEL_PATH)
 model = artifact["model"]
 FEATURES = artifact["features"]
 LABELS = artifact["label_encoder_classes"]
+ANIMAL_SYMPTOMS = artifact.get("animal_symptoms", {})  # Load animal-symptom mapping
 
 app = FastAPI(title="Smart Livestock ML Service v2")
 
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "features": FEATURES, "labels": LABELS}
+    # Filter to show only displayable symptoms (exclude internal features)
+    displayable_symptoms = [
+        f for f in FEATURES 
+        if f not in ['age', 'body_temperature'] 
+        and not f.startswith('animal_') 
+        and not f.startswith('interact_')
+    ]
+    return {
+        "status": "ok", 
+        "features": displayable_symptoms,  # For frontend compatibility
+        "symptoms": displayable_symptoms,  # Explicit symptoms field
+        "labels": LABELS,
+        "all_features": FEATURES  # For debugging only
+    }
 
 
 @app.post("/predict")
@@ -94,4 +108,37 @@ def normalize(payload: dict):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/symptoms_for_animal/{animal}")
+def symptoms_for_animal(animal: str):
+    """
+    Get symptoms that are valid/occur for a specific animal type.
+    Uses the animal-symptom mapping extracted from training data.
+    """
+    animal_lower = animal.lower().strip()
+    
+    # Validate animal
+    canonical_animal = map_to_canonical_animal(animal_lower)
+    if not canonical_animal:
+        raise HTTPException(status_code=400, detail=f"Unknown animal type: {animal}")
+    
+    # Get symptoms from the pre-built mapping
+    valid_symptoms = ANIMAL_SYMPTOMS.get(canonical_animal, [])
+    
+    # If mapping is empty, return all base symptoms as fallback
+    if not valid_symptoms:
+        valid_symptoms = [
+            f for f in FEATURES 
+            if f not in ['age', 'body_temperature'] 
+            and not f.startswith('animal_') 
+            and not f.startswith('interact_')
+        ]
+    
+    return {
+        "animal": canonical_animal,
+        "symptoms": valid_symptoms,
+        "count": len(valid_symptoms)
+    }
+
 

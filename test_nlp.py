@@ -1,3 +1,12 @@
+import os
+
+# make sure the model artifact exists (chooses same path as training script)
+from train_decision_tree import OUT_PATH, main as train_model
+
+if not os.path.exists(OUT_PATH):
+    print("Model artifact missing, running training...")
+    train_model()
+
 from nlp_service import predict_from_nlp
 
 result = predict_from_nlp(
